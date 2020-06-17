@@ -1,0 +1,551 @@
+{
+	"info": {
+		"_postman_id": "{{postman_id}}",
+		"name": "Public API",
+		"schema": ""
+	},
+	"item": [
+		{
+			"name": "OAuth 2.0",
+			"item": [
+				{
+					"name": "Get Auth code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://account.withings.com/oauth2_user/authorize2?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=code&state={{state}}&scope={{scope}}",
+							"protocol": "https",
+							"host": [
+								"account",
+								"withings",
+								"com"
+							],
+							"path": [
+								"oauth2_user",
+								"authorize2"
+							],
+							"query": [
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "{{client_id}}"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "{{redirect_uri}}"
+								},
+								{
+									"key": "response_type",
+									"value": "code"
+								},
+								{
+									"key": "state",
+									"value": "{{state}}"
+								},
+								{
+									"key": "scope",
+									"value":"{{scope}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
+									"postman.setEnvironmentVariable(\"userid\", jsonData.userid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{secret}}",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "ae009b7e221943da1b1a721cd84af6e533f3c703",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_account}}/oauth2/token",
+							"host": [
+								"{{root_account}}"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
+									"postman.setEnvironmentVariable(\"userid\", jsonData.userid);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "{{secret}}",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{root_account}}/oauth2/token",
+							"host": [
+								"{{root_account}}"
+							],
+							"path": [
+								"oauth2",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get Device",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "http://scalews.corp.withings.com/v2/user?action=getdevice",
+							"protocol": "http",
+							"host": [
+								"scalews",
+								"corp",
+								"withings",
+								"com"
+							],
+							"path": [
+								"v2",
+								"user"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "getdevice"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Sleep",
+			"item": [
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{root_beta}}/sleep?action=get&startdate=1566777120&enddate=1566806280&data_fields=hr,rr,snoring",
+							"host": [
+								"{{root_beta}}"
+							],
+							"path": [
+								"sleep"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "get"
+								},
+								{
+									"key": "startdate",
+									"value": "1566777120"
+								},
+								{
+									"key": "enddate",
+									"value": "1566806280"
+								},
+								{
+									"key": "data_fields",
+									"value": "hr,rr,snoring"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get summary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "{{root_beta}}/sleep?action=getsummary&lastupdate=1561939200&data_fields=breathing_disturbances_intensity,sleep_score&=",
+							"host": [
+								"{{root_beta}}"
+							],
+							"path": [
+								"sleep"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "getsummary"
+								},
+								{
+									"key": "lastupdate",
+									"value": "1561939200"
+								},
+								{
+									"key": "data_fields",
+									"value": "breathing_disturbances_intensity,sleep_score",
+									"description": "wakeupduration,lightsleepduration,deepsleepduration,wakeupcount,durationtosleep,remsleepduration,durationtowakeup,hr_average,hr_min,hr_max,rr_average,rr_min,rr_max"
+								},
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Measures",
+			"item": [
+				{
+					"name": "Getmeas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "{{root_prod}}/measure?action=getmeas&meastype=9&category=1&lastupdate=1567944004&offset=0",
+							"host": [
+								"{{root_prod}}"
+							],
+							"path": [
+								"measure"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "getmeas"
+								},
+								{
+									"key": "meastype",
+									"value": "9"
+								},
+								{
+									"key": "category",
+									"value": "1"
+								},
+								{
+									"key": "lastupdate",
+									"value": "1567944004"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "startdate",
+									"value": "1567980000",
+									"disabled": true
+								},
+								{
+									"key": "enddate",
+									"value": "1568239200",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get summary",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"url": {
+							"raw": "{{root_beta}}/sleep?action=getsummary&lastupdate=1561939200&data_fields=breathing_disturbances_intensity,sleep_score&=",
+							"host": [
+								"{{root_beta}}"
+							],
+							"path": [
+								"sleep"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "getsummary"
+								},
+								{
+									"key": "lastupdate",
+									"value": "1561939200"
+								},
+								{
+									"key": "data_fields",
+									"value": "breathing_disturbances_intensity,sleep_score",
+									"description": "wakeupduration,lightsleepduration,deepsleepduration,wakeupcount,durationtosleep,remsleepduration,durationtowakeup,hr_average,hr_min,hr_max,rr_average,rr_min,rr_max"
+								},
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Heart",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{root_beta}}/heart?action=list&data_fields=hr,ecg,stetho&startdate=1567695600&enddate=1567699200",
+							"host": [
+								"{{root_beta}}"
+							],
+							"path": [
+								"heart"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "list"
+								},
+								{
+									"key": "data_fields",
+									"value": "hr,ecg,stetho"
+								},
+								{
+									"key": "startdate",
+									"value": "1567695600"
+								},
+								{
+									"key": "enddate",
+									"value": "1567699200"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5e80d22a-b0e3-4e86-b5ac-bc985bec4d52",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "f616c03a-b5ad-4acb-86ed-953a3282c2e2",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
