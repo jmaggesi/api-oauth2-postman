@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "{{postman_id}}",
+		"_postman_id": "4dcc52ae-fef0-4607-a117-0908b84c3cd6",
 		"name": "Public API",
-		"schema": ""
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -14,10 +14,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://account.withings.com/oauth2_user/authorize2?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=code&state={{state}}&scope={{scope}}",
+							"raw": "https://account.withings.com/oauth2_user/authorize2?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE&scope=SCOPE",
 							"protocol": "https",
 							"host": [
 								"account",
+								"corp",
 								"withings",
 								"com"
 							],
@@ -28,12 +29,12 @@
 							"query": [
 								{
 									"key": "client_id",
-									"value": "{{client_id}}",
+									"value": "bc7c6d734022c3d4750bf641a84e5591f0f77f9b8517a4a9bb576b712967dafa",
 									"description": "{{client_id}}"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "{{redirect_uri}}",
+									"value": "https://www.withings.com",
 									"description": "{{redirect_uri}}"
 								},
 								{
@@ -42,11 +43,11 @@
 								},
 								{
 									"key": "state",
-									"value": "{{state}}"
+									"value": "1dpkng54fke7g"
 								},
 								{
 									"key": "scope",
-									"value":"{{scope}}"
+									"value": "sdk.accountowner,user.getinfo,user.info,user.metrics,user.activity,device.info,device.environment"
 								}
 							]
 						}

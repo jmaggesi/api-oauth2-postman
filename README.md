@@ -7,12 +7,8 @@ Before you get started, you'll need the following prerequisites:
 * [A Withings account](https://account.withings.com/connectionuser/account_create)
 * [A Withings developer app](https://account.withings.com/partner/account_login?b=add_oauth2)
 
-To connect to withings' developer API through Oauth 2.0, modify OAuth 2.0 [url](https://developer.withings.com/oauth2/#tag/OAuth-2.0) in the Postman sample
-
-Then replace named place holder with :
-* Client_id and Client_secret you got from your developer account
-* Access token
-* Refresh token [url](https://developer.withings.com/oauth2/#tag/OAuth-2.0%2Fpaths%2Fhttps%3A~1~1account.withings.com~1oauth2~1token%20%5Bgrant_type%3Drefresh_token...%5D%2Fpost) in the POST call
-* Paths
+To connect to withings' developer API through Oauth 2.0, update the Public_API_postman_collection.json at :
+- line 17 : "https://account.withings.com/oauth2_user/authorize2?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE&scope=SCOPE"
+with your credentials.
 
 For any further information, don't hesitate to check our full documentation.
