@@ -9,16 +9,225 @@
 			"name": "OAuth 2.0",
 			"item": [
 				{
+					"name": "Via account",
+					"item": [
+						{
+							"name": "Get access token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"// TEST MAIN RESPONSE BODY",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test('Response schema should be correct.', function () {",
+											"    pm.expect(jsonData).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\",\"userid\");",
+											"});",
+											"",
+											"pm.test(\"Response value type should be correct.\", function () {",
+											"    pm.expect(jsonData.access_token).to.be.a('string');",
+											"    pm.expect(jsonData.refresh_token).to.be.a('string');",
+											"    pm.expect(jsonData.scope).to.be.a('string');",
+											"    pm.expect(jsonData.expires_in).to.be.a('number');",
+											"    pm.expect(jsonData.csrf_token).to.be.a('string');",
+											"    pm.expect(jsonData.token_type).to.be.a('string');",
+											"    pm.expect(jsonData.userid).to.be.a('string');",
+											"});",
+											"",
+											"// LOGS DATA",
+											"if (typeof jsonData.access_token != \"undefined\"){",
+											"    pm.environment.set(\"access_token\", jsonData.access_token);",
+											"    pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+											"    pm.environment.set(\"csrf_token\", jsonData.csrf_token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "grant_type",
+											"value": "authorization_code",
+											"description": "DO NOT CHANGE",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{client_id}}",
+											"description": "Available on your Withings partner dashboard",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{secret}}",
+											"description": "Available on your Withings partner dashboard",
+											"type": "text"
+										},
+										{
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}",
+											"description": "Available on your Withings partner dashboard",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "{{code}}",
+											"description": "Computed OAuth 2.0 Authorization code",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://account.withings.com/oauth2/token",
+									"host": [
+										"https://account.withings.com"
+									],
+									"path": [
+										"oauth2",
+										"token"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh access token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+										"exec": [
+											"var jsonData = pm.response.json();",
+											"// TEST MAIN RESPONSE BODY",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test('Response schema should be correct.', function () {",
+											"    pm.expect(jsonData).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\",\"userid\");",
+											"});",
+											"",
+											"pm.test(\"Response value type should be correct.\", function () {",
+											"    pm.expect(jsonData.access_token).to.be.a('string');",
+											"    pm.expect(jsonData.refresh_token).to.be.a('string');",
+											"    pm.expect(jsonData.scope).to.be.a('string');",
+											"    pm.expect(jsonData.expires_in).to.be.a('number');",
+											"    pm.expect(jsonData.csrf_token).to.be.a('string');",
+											"    pm.expect(jsonData.token_type).to.be.a('string');",
+											"    pm.expect(jsonData.userid).to.be.a('number');",
+											"});",
+											"",
+											"// LOGS DATA",
+											"if (typeof jsonData.access_token != \"undefined\"){",
+											"    pm.environment.set(\"access_token\", jsonData.access_token);",
+											"    pm.environment.set(\"refresh_token\", jsonData.refresh_token);",
+											"    pm.environment.set(\"csrf_token\", jsonData.csrf_token);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "grant_type",
+											"value": "refresh_token",
+											"description": "DO NOT CHANGE",
+											"type": "text"
+										},
+										{
+											"key": "client_id",
+											"value": "{{client_id}}",
+											"description": "Available on your Withings partner dashboard",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{secret}}",
+											"description": "Available on your Withings partner dashboard",
+											"type": "text"
+										},
+										{
+											"key": "refresh_token",
+											"value": "{{refresh_token}}",
+											"description": "Computed OAuth 2.0 refresh token",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://account.withings.com/oauth2/token",
+									"host": [
+										"https://account.withings.com"
+									],
+									"path": [
+										"oauth2",
+										"token"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "c9096204-5ace-43d6-a4b6-4ac6d28f4de9",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7029d70a-3d43-41cc-ba19-5771dcbd366c",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "Get Auth code",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://account.withings.com/oauth2_user/authorize2?client_id=CLIENT_ID&redirect_uri=REDIRECT_URI&response_type=code&state=STATE&scope=SCOPE",
+							"raw": "https://account.withings.com/oauth2_user/authorize2?response_type=code&client_id={{client_id}}&redirect_uri={{redirect_uri}}&state={{state}}&scope={{scope}}",
 							"protocol": "https",
 							"host": [
 								"account",
-								"corp",
 								"withings",
 								"com"
 							],
@@ -28,26 +237,29 @@
 							],
 							"query": [
 								{
+									"key": "response_type",
+									"value": "code",
+									"description": "DO NOT CHANGE"
+								},
+								{
 									"key": "client_id",
-									"value": "bc7c6d734022c3d4750bf641a84e5591f0f77f9b8517a4a9bb576b712967dafa",
-									"description": "{{client_id}}"
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard"
 								},
 								{
 									"key": "redirect_uri",
-									"value": "https://www.withings.com",
-									"description": "{{redirect_uri}}"
-								},
-								{
-									"key": "response_type",
-									"value": "code"
+									"value": "{{redirect_uri}}",
+									"description": "Available on your Withings partner dashboard"
 								},
 								{
 									"key": "state",
-									"value": "1dpkng54fke7g"
+									"value": "{{state}}",
+									"description": "Random state"
 								},
 								{
 									"key": "scope",
-									"value": "sdk.accountowner,user.getinfo,user.info,user.metrics,user.activity,device.info,device.environment"
+									"value": "{{scope}}",
+									"description": "Available scopes on https://developer.withings.com/oauth2/"
 								}
 							]
 						}
@@ -55,17 +267,61 @@
 					"response": []
 				},
 				{
-					"name": "Get access token",
+					"name": "[secret] Get access token",
 					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "3f710f09-66ae-48be-b1a7-d46142564bbc",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
 						{
 							"listen": "test",
 							"script": {
-								"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+								"id": "96df9d44-ff89-489d-92fe-0f941e0ad8c2",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
-									"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
-									"postman.setEnvironmentVariable(\"userid\", jsonData.userid);"
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.access_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.refresh_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.scope).to.be.a('string');",
+									"    pm.expect(jsonData.body.expires_in).to.be.a('number');",
+									"    pm.expect(jsonData.body.csrf_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.token_type).to.be.a('string');",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.access_token != \"undefined\"){",
+									"    pm.environment.set(\"access_token\", jsonData.body.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.body.refresh_token);",
+									"    pm.environment.set(\"csrf_token\", jsonData.body.csrf_token);",
+									"}"
 								],
 								"type": "text/javascript"
 							}
@@ -77,65 +333,120 @@
 							{
 								"key": "Content-Type",
 								"name": "Content-Type",
-								"value": "application/x-www-form-urlencoded",
-								"type": "text"
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
 							}
 						],
 						"body": {
 							"mode": "urlencoded",
 							"urlencoded": [
 								{
-									"key": "grant_type",
-									"value": "authorization_code",
+									"key": "action",
+									"value": "requesttoken",
+									"description": "DO NOT CHANGE",
 									"type": "text"
 								},
 								{
 									"key": "client_id",
 									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
 									"type": "text"
 								},
 								{
 									"key": "client_secret",
 									"value": "{{secret}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "{{code}}",
+									"description": "Computed OAuth 2.0 Authorization code",
 									"type": "text"
 								},
 								{
 									"key": "redirect_uri",
 									"value": "{{redirect_uri}}",
-									"type": "text"
-								},
-								{
-									"key": "code",
-									"value": "ae009b7e221943da1b1a721cd84af6e533f3c703",
+									"description": "Available on your Withings partner dashboard",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{root_account}}/oauth2/token",
+							"raw": "https://wbsapi.withings.net/v2/oauth2",
 							"host": [
-								"{{root_account}}"
+								"https://wbsapi.withings.net"
 							],
 							"path": [
-								"oauth2",
-								"token"
+								"v2",
+								"oauth2"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Refresh access token",
+					"name": "[secret] Refresh access token",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
-								"id": "a17a5174-4b6e-475e-9479-7a94b4dbd202",
+								"id": "e399e489-f601-410b-917e-77cc56668e3e",
 								"exec": [
-									"var jsonData = JSON.parse(responseBody);",
-									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
-									"postman.setEnvironmentVariable(\"refresh_token\", jsonData.refresh_token);",
-									"postman.setEnvironmentVariable(\"userid\", jsonData.userid);"
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.access_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.refresh_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.scope).to.be.a('string');",
+									"    pm.expect(jsonData.body.expires_in).to.be.a('number');",
+									"    pm.expect(jsonData.body.csrf_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.token_type).to.be.a('string');",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.access_token != \"undefined\"){",
+									"    pm.environment.set(\"access_token\", jsonData.body.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.body.refresh_token);",
+									"    pm.environment.set(\"csrf_token\", jsonData.body.csrf_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a2f308a1-d951-4435-8f73-edf120faa2c8",
+								"exec": [
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -145,38 +456,296 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
-									"key": "grant_type",
-									"value": "refresh_token",
+									"key": "action",
+									"value": "requesttoken",
+									"description": "DO NOT CHANGE",
 									"type": "text"
 								},
 								{
 									"key": "client_id",
 									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
 									"type": "text"
 								},
 								{
 									"key": "client_secret",
 									"value": "{{secret}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"description": "DO NOT CHANGE",
 									"type": "text"
 								},
 								{
 									"key": "refresh_token",
 									"value": "{{refresh_token}}",
+									"description": "Computed OAuth 2.0 refresh token",
 									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{root_account}}/oauth2/token",
+							"raw": "https://wbsapi.withings.net/v2/oauth2",
 							"host": [
-								"{{root_account}}"
+								"https://wbsapi.withings.net"
 							],
 							"path": [
-								"oauth2",
-								"token"
+								"v2",
+								"oauth2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[signed] Get access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b109472c-d737-44e0-90f0-480546452ee6",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.access_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.refresh_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.scope).to.be.a('string');",
+									"    pm.expect(jsonData.body.expires_in).to.be.a('number');",
+									"    pm.expect(jsonData.body.csrf_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.token_type).to.be.a('string');",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.access_token != \"undefined\"){",
+									"    pm.environment.set(\"access_token\", jsonData.body.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.body.refresh_token);",
+									"    pm.environment.set(\"csrf_token\", jsonData.body.csrf_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4ba5e395-ca11-47e5-b010-e4d806b04b76",
+								"exec": [
+									"// Use the CryptoJS",
+									"var data = \"requesttoken\"+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "requesttoken",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "authorization_code",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "{{code}}",
+									"description": "Computed OAuth 2.0 Authorization code",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/oauth2",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"oauth2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[signed] Refresh access token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc3ea4bb-5319-426e-a77c-6b4b0096c2be",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"access_token\",\"refresh_token\",\"scope\",\"expires_in\",\"csrf_token\",\"token_type\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.access_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.refresh_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.scope).to.be.a('string');",
+									"    pm.expect(jsonData.body.expires_in).to.be.a('number');",
+									"    pm.expect(jsonData.body.csrf_token).to.be.a('string');",
+									"    pm.expect(jsonData.body.token_type).to.be.a('string');",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.access_token != \"undefined\"){",
+									"    pm.environment.set(\"access_token\", jsonData.body.access_token);",
+									"    pm.environment.set(\"refresh_token\", jsonData.body.refresh_token);",
+									"    pm.environment.set(\"csrf_token\", jsonData.body.csrf_token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8f33242c-ab29-4ebc-a047-cf6ca7601aca",
+								"exec": [
+									"// Use the CryptoJS",
+									"var data = \"requesttoken\"+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "requesttoken",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"description": "Computed OAuth 2.0 refresh token",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/oauth2",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"oauth2"
 							]
 						}
 					},
@@ -188,7 +757,658 @@
 			"name": "User",
 			"item": [
 				{
+					"name": "Create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "091d177d-8885-4b67-ab34-f916aefa52de",
+								"exec": [
+									"// Create signature",
+									"var action = \"create\";",
+									"var data = action+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);",
+									"",
+									"// Mailing pref",
+									"var mailingpref = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('mailingpref', mailingpref);",
+									"",
+									"// Birthdate",
+									"var max_birthdate = 1262304000; // 2020/1/1 à 0:00:00",
+									"var min_birthdate = -631152000; // 1950/1/1 à 0:00:00",
+									"var birthdate = Math.floor(Math.random() * (max_birthdate - min_birthdate +1)) + min_birthdate;",
+									"pm.environment.set('birthdate', birthdate);",
+									"",
+									"// Measures",
+									"var max_height = 230;",
+									"var min_height = 100;",
+									"var max_weight = 20000;",
+									"var min_weight = 3000;",
+									"var measures = JSON.stringify([",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_height - min_height +1)) + min_height,",
+									"        \"unit\": -2,",
+									"        \"type\": 4",
+									"    },",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_weight - min_weight +1)) + min_weight,",
+									"        \"unit\": -2,",
+									"        \"type\": 1",
+									"    }",
+									"]);",
+									"pm.environment.set('measures', measures);",
+									"",
+									"// Gender",
+									"var gender = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('gender', gender);",
+									"",
+									"// Preflang",
+									"var languages = ['en_EN','en_US','de_DE','es_ES','fr_FR','it_IT','ja_JA','ko_KR','nl_NL','pt_PT','ru_RU','zh_CN'];",
+									"var preflang = languages[Math.floor(Math.random() * languages.length)];",
+									"pm.environment.set('preflang', preflang);",
+									"",
+									"// Unit Pref",
+									"var unit_weight = [1,2,14];",
+									"var unit_distance = [6,8];",
+									"var unit_temperature = [11,13];",
+									"var unit_height = [6,7];",
+									"",
+									"var unif_pref = JSON.stringify({",
+									"    \"weight\":unit_weight[Math.floor(Math.random() * unit_weight.length)],",
+									"    \"distance\":unit_distance[Math.floor(Math.random() * unit_distance.length)],",
+									"    \"temperature\":unit_temperature[Math.floor(Math.random() * unit_temperature.length)],",
+									"    \"height\":unit_height[Math.floor(Math.random() * unit_height.length)]",
+									"});",
+									"pm.environment.set('unif_pref', unif_pref);",
+									"",
+									"// Email",
+									"var user_email = \"test_\".concat(pm.variables.replaceIn('{{$randomInt}}'),\"@example.com\");",
+									"pm.environment.set('user_email', user_email);",
+									"",
+									"// Firstname Lastname",
+									"var user_firstname = pm.variables.replaceIn('{{$randomFirstName}}');",
+									"var user_lastname = pm.variables.replaceIn('{{$randomLastName}}');",
+									"pm.environment.set('user_firstname', user_firstname);",
+									"pm.environment.set('user_lastname', user_lastname);",
+									"",
+									"// Shortname",
+									"var shortname = (user_firstname.substring(0,1)+user_lastname.substring(0,2)).toUpperCase();",
+									"pm.environment.set('shortname', shortname);",
+									"",
+									"// External ID",
+									"var external_id = pm.variables.replaceIn('{{$randomUUID}}');",
+									"pm.environment.set('external_id', external_id);",
+									"",
+									"// Scope Oauth 2.0",
+									"var scope_oauth2 = \"user.getinfo,user.info,user.metrics,user.activity,device.info,device.environment,sdk.accountowner\";",
+									"pm.environment.set('scope_oauth2', scope_oauth2);",
+									"",
+									"// Timezone",
+									"var sample_of_valid_timezone = [\"Africa/Brazzaville\",\"America/Argentina/San_Luis\",\"America/Anguilla\",\"America/El_Salvador\",\"America/Halifax\",\"America/Montserrat\",\"Antarctica/Palmer\",\"Asia/Karachi\",\"Asia/Yakutsk\",\"Brazil/West\",\"Europe/Ljubljana\",\"Asia/Nicosia\",\"Europe/Rome\",\"Europe/Zagreb\",\"Israel\",\"Pacific/Noumea\",\"US/Eastern\",\"US/Alaska\"];",
+									"var timezone = sample_of_valid_timezone[Math.floor(Math.random() * sample_of_valid_timezone.length)];",
+									"pm.environment.set('timezone', timezone);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "faa658ca-953a-4bda-a420-2beda0afb136",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {    ",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"user\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.user).to.be.a('object');",
+									"});",
+									"",
+									"// TEST USER RESPONSE BODY",
+									"pm.test('User schema should be correct.', function () {",
+									"    pm.expect(jsonData.body.user).to.have.all.keys(\"code\",\"external_id\");",
+									"});",
+									"",
+									"pm.test('User response value type should be correct.', function () {",
+									"    pm.expect(jsonData.body.user.code).to.be.a('string');",
+									"    pm.expect(jsonData.body.user.external_id).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Check if external_id returned is the same than the provided one.\", function () {",
+									"    pm.expect(jsonData.body.user.external_id).to.eql(pm.environment.get('external_id'));",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.user != \"undefined\"){",
+									"    pm.environment.set(\"code\", jsonData.body.user.code);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "create",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "mailingpref",
+									"value": "{{mailingpref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "birthdate",
+									"value": "{{birthdate}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "measures",
+									"value": "{{measures}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "{{gender}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "preflang",
+									"value": "{{preflang}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "unit_pref",
+									"value": "{{unif_pref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{user_email}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "{{timezone}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "firstname",
+									"value": "{{user_firstname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "{{user_lastname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "shortname",
+									"value": "{{shortname}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "external_id",
+									"value": "{{external_id}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "scope_oauth2",
+									"value": "{{scope_oauth2}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/user",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Activate",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ad7d3d0c-81da-49c9-b5d3-02cdc67964e6",
+								"exec": [
+									"// Create signature",
+									"var action = \"activate\";",
+									"var data = action+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);",
+									"",
+									"// Mailing pref",
+									"var mailingpref = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('mailingpref', mailingpref);",
+									"",
+									"// Birthdate",
+									"var max_birthdate = 1262304000; // 2020/1/1 à 0:00:00",
+									"var min_birthdate = -631152000; // 1950/1/1 à 0:00:00",
+									"var birthdate = Math.floor(Math.random() * (max_birthdate - min_birthdate +1)) + min_birthdate;",
+									"pm.environment.set('birthdate', birthdate);",
+									"",
+									"// Measures",
+									"var max_height = 230;",
+									"var min_height = 100;",
+									"var max_weight = 20000;",
+									"var min_weight = 3000;",
+									"var measures = JSON.stringify([",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_height - min_height +1)) + min_height,",
+									"        \"unit\": -2,",
+									"        \"type\": 4",
+									"    },",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_weight - min_weight +1)) + min_weight,",
+									"        \"unit\": -2,",
+									"        \"type\": 1",
+									"    }",
+									"]);",
+									"pm.environment.set('measures', measures);",
+									"",
+									"// Gender",
+									"var gender = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('gender', gender);",
+									"",
+									"// Preflang",
+									"var languages = ['en_EN','en_US','de_DE','es_ES','fr_FR','it_IT','ja_JA','ko_KR','nl_NL','pt_PT','ru_RU','zh_CN'];",
+									"var preflang = languages[Math.floor(Math.random() * languages.length)];",
+									"pm.environment.set('preflang', preflang);",
+									"",
+									"// Unit Pref",
+									"var unit_weight = [1,2,14];",
+									"var unit_distance = [6,8];",
+									"var unit_temperature = [11,13];",
+									"var unit_height = [6,7];",
+									"",
+									"var unif_pref = JSON.stringify({",
+									"    \"weight\":unit_weight[Math.floor(Math.random() * unit_weight.length)],",
+									"    \"distance\":unit_distance[Math.floor(Math.random() * unit_distance.length)],",
+									"    \"temperature\":unit_temperature[Math.floor(Math.random() * unit_temperature.length)],",
+									"    \"height\":unit_height[Math.floor(Math.random() * unit_height.length)]",
+									"});",
+									"pm.environment.set('unif_pref', unif_pref);",
+									"",
+									"// Email",
+									"var user_email = \"test_\".concat(pm.variables.replaceIn('{{$randomInt}}'),\"@example.com\");",
+									"pm.environment.set('user_email', user_email);",
+									"",
+									"// Firstname Lastname",
+									"var user_firstname = pm.variables.replaceIn('{{$randomFirstName}}');",
+									"var user_lastname = pm.variables.replaceIn('{{$randomLastName}}');",
+									"pm.environment.set('user_firstname', user_firstname);",
+									"pm.environment.set('user_lastname', user_lastname);",
+									"",
+									"// Shortname",
+									"var shortname = (user_firstname.substring(0,1)+user_lastname.substring(0,2)).toUpperCase();",
+									"pm.environment.set('shortname', shortname);",
+									"",
+									"// External ID",
+									"var external_id = pm.variables.replaceIn('{{$randomUUID}}');",
+									"pm.environment.set('external_id', external_id);",
+									"",
+									"// Scope Oauth 2.0",
+									"var scope_oauth2 = \"user.getinfo,user.info,user.metrics,user.activity,device.info,device.environment,sdk.accountowner\";",
+									"pm.environment.set('scope_oauth2', scope_oauth2);",
+									"",
+									"// Timezone",
+									"var sample_of_valid_timezone = [\"Africa/Brazzaville\",\"America/Argentina/San_Luis\",\"America/Anguilla\",\"America/El_Salvador\",\"America/Halifax\",\"America/Montserrat\",\"Antarctica/Palmer\",\"Asia/Karachi\",\"Asia/Yakutsk\",\"Brazil/West\",\"Europe/Ljubljana\",\"Asia/Nicosia\",\"Europe/Rome\",\"Europe/Zagreb\",\"Israel\",\"Pacific/Noumea\",\"US/Eastern\",\"US/Alaska\"];",
+									"var timezone = sample_of_valid_timezone[Math.floor(Math.random() * sample_of_valid_timezone.length)];",
+									"pm.environment.set('timezone', timezone);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a9e20405-c28b-416a-8a25-8af56ebf04e6",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"user\",\"devices\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.user).to.be.a('object');",
+									"    pm.expect(jsonData.body.devices).to.be.a('array');",
+									"});",
+									"",
+									"// TEST USER RESPONSE BODY",
+									"pm.test('User schema should be correct.', function () {",
+									"    pm.expect(jsonData.body.user).to.have.all.keys(\"code\",\"external_id\");",
+									"});",
+									"",
+									"pm.test('User response value type should be correct.', function () {",
+									"    pm.expect(jsonData.body.user.code).to.be.a('string');",
+									"    pm.expect(jsonData.body.user.external_id).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Check if external_id returned is the same than the provided one.\", function () {",
+									"    pm.expect(jsonData.body.user.external_id).to.eql(pm.environment.get('external_id'));",
+									"});",
+									"",
+									"// TEST DEVICES RESPONSE BODY",
+									"pm.test('Devices schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i]).to.have.all.keys(\"mac_address\",\"type\",\"model\",\"model_id\",\"battery\",\"deviceid\",\"timezone\",\"last_session_date\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Devices response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i].mac_address).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].type).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model_id).to.be.a('number');",
+									"        pm.expect(jsonData.body.devices[i].battery).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].deviceid).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].timezone).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].last_session_date).to.be.a('number');",
+									"    } ",
+									"});",
+									"",
+									"pm.test(\"Check if mac_addresses returned are the same than the provided ones.\", function () {",
+									"    pm.expect(jsonData.body.devices.length).to.eql(JSON.parse(pm.environment.get('mac_addresses')).length);",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i].mac_address).to.eql(JSON.parse(pm.environment.get('mac_addresses'))[i]);",
+									"    }",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.user != \"undefined\"){",
+									"    pm.environment.set(\"code\", jsonData.body.user.code);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "activate",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "mailingpref",
+									"value": "{{mailingpref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "birthdate",
+									"value": "{{birthdate}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "measures",
+									"value": "{{measures}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "{{gender}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "preflang",
+									"value": "{{preflang}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "unit_pref",
+									"value": "{{unif_pref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{user_email}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "firstname",
+									"value": "{{user_firstname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "{{user_lastname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "shortname",
+									"value": "{{shortname}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "external_id",
+									"value": "{{external_id}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "scope_oauth2",
+									"value": "{{scope_oauth2}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "{{timezone}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "mac_addresses",
+									"value": "{{mac_addresses}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/user",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Device",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "490a2202-e303-4f3d-bbdd-cd63c75a748c",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"devices\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.devices).to.be.a('array');",
+									"});",
+									"",
+									"// TEST DEVICES RESPONSE BODY",
+									"pm.test('Devices schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i]).to.have.all.keys(\"mac_address\",\"type\",\"model\",\"model_id\",\"battery\",\"deviceid\",\"timezone\",\"last_session_date\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Devices response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i].mac_address).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].type).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model_id).to.be.a('number');",
+									"        pm.expect(jsonData.body.devices[i].battery).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].deviceid).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].timezone).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].last_session_date).to.be.a('number');",
+									"    } ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -200,7 +1420,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -209,24 +1429,392 @@
 								"value": "application/x-www-form-urlencoded"
 							}
 						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getdevice",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								}
+							]
+						},
 						"url": {
-							"raw": "http://scalews.corp.withings.com/v2/user?action=getdevice",
-							"protocol": "http",
+							"raw": "https://wbsapi.withings.net/v2/user",
 							"host": [
-								"scalews",
-								"corp",
-								"withings",
-								"com"
+								"https://wbsapi.withings.net"
 							],
 							"path": [
 								"v2",
 								"user"
-							],
-							"query": [
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Link",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3290f33c-a7c8-4cdc-bb6e-c99d302d6fea",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"devices\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.devices).to.be.a('array');",
+									"});",
+									"",
+									"// TEST DEVICES RESPONSE BODY",
+									"pm.test('Devices schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i]).to.have.all.keys(\"mac_address\",\"type\",\"model\",\"model_id\",\"battery\",\"deviceid\",\"timezone\",\"last_session_date\");",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Devices response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i].mac_address).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].type).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].model_id).to.be.a('number');",
+									"        pm.expect(jsonData.body.devices[i].battery).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].deviceid).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].timezone).to.be.a('string');",
+									"        pm.expect(jsonData.body.devices[i].last_session_date).to.be.a('number');",
+									"    } ",
+									"});",
+									"",
+									"pm.test(\"Check if mac_addresses returned are the same than the provided ones.\", function () {",
+									"    pm.expect(jsonData.body.devices.length).to.eql(JSON.parse(pm.environment.get('mac_addresses')).length);",
+									"    for (var i=0; i<jsonData.body.devices.length; i++){",
+									"        pm.expect(jsonData.body.devices[i].mac_address).to.eql(JSON.parse(pm.environment.get('mac_addresses'))[i]);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
 									"key": "action",
-									"value": "getdevice"
+									"value": "link",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "mac_addresses",
+									"value": "{{mac_addresses}}",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/user",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Measures",
+			"item": [
+				{
+					"name": "Getmeas",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getmeas",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "meastype",
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
+								},
+								{
+									"key": "category",
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
+								},
+								{
+									"key": "lastupdate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/measure",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"measure"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get activity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getactivity",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "lastupdate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "data_fields",
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/measure",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"measure"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get getintradayactivity",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getintradayactivity",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "startdate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "enddate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "data_fields",
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/measure",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"measure"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get workouts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getworkouts",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "lastupdate",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "data_fields",
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/measure",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"measure"
 							]
 						}
 					},
@@ -251,7 +1839,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -260,31 +1848,41 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "{{root_beta}}/sleep?action=get&startdate=1566777120&enddate=1566806280&data_fields=hr,rr,snoring",
-							"host": [
-								"{{root_beta}}"
-							],
-							"path": [
-								"sleep"
-							],
-							"query": [
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
 									"key": "action",
-									"value": "get"
+									"value": "get",
+									"description": "DO NOT CHANGE",
+									"type": "text"
 								},
 								{
 									"key": "startdate",
-									"value": "1566777120"
+									"value": "",
+									"type": "text"
 								},
 								{
 									"key": "enddate",
-									"value": "1566806280"
+									"value": "",
+									"type": "text"
 								},
 								{
 									"key": "data_fields",
-									"value": "hr,rr,snoring"
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/sleep",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"sleep"
 							]
 						}
 					},
@@ -303,7 +1901,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -312,162 +1910,43 @@
 								"value": "application/x-www-form-urlencoded"
 							}
 						],
-						"url": {
-							"raw": "{{root_beta}}/sleep?action=getsummary&lastupdate=1561939200&data_fields=breathing_disturbances_intensity,sleep_score&=",
-							"host": [
-								"{{root_beta}}"
-							],
-							"path": [
-								"sleep"
-							],
-							"query": [
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
 									"key": "action",
-									"value": "getsummary"
+									"value": "getsummary",
+									"description": "DO NOT CHANGE",
+									"type": "text"
 								},
 								{
 									"key": "lastupdate",
-									"value": "1561939200"
+									"value": "",
+									"type": "text"
 								},
 								{
 									"key": "data_fields",
-									"value": "breathing_disturbances_intensity,sleep_score",
-									"description": "wakeupduration,lightsleepduration,deepsleepduration,wakeupcount,durationtosleep,remsleepduration,durationtowakeup,hr_average,hr_min,hr_max,rr_average,rr_min,rr_max"
-								},
-								{
-									"key": "",
-									"value": ""
+									"value": "",
+									"description": "Available values on https://developer.withings.com/",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/sleep",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"sleep"
 							]
 						}
 					},
 					"response": []
 				}
-			]
-		},
-		{
-			"name": "Measures",
-			"item": [
-				{
-					"name": "Getmeas",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"url": {
-							"raw": "{{root_prod}}/measure?action=getmeas&meastype=9&category=1&lastupdate=1567944004&offset=0",
-							"host": [
-								"{{root_prod}}"
-							],
-							"path": [
-								"measure"
-							],
-							"query": [
-								{
-									"key": "action",
-									"value": "getmeas"
-								},
-								{
-									"key": "meastype",
-									"value": "9"
-								},
-								{
-									"key": "category",
-									"value": "1"
-								},
-								{
-									"key": "lastupdate",
-									"value": "1567944004"
-								},
-								{
-									"key": "offset",
-									"value": "0"
-								},
-								{
-									"key": "startdate",
-									"value": "1567980000",
-									"disabled": true
-								},
-								{
-									"key": "enddate",
-									"value": "1568239200",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get summary",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"type": "text",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"url": {
-							"raw": "{{root_beta}}/sleep?action=getsummary&lastupdate=1561939200&data_fields=breathing_disturbances_intensity,sleep_score&=",
-							"host": [
-								"{{root_beta}}"
-							],
-							"path": [
-								"sleep"
-							],
-							"query": [
-								{
-									"key": "action",
-									"value": "getsummary"
-								},
-								{
-									"key": "lastupdate",
-									"value": "1561939200"
-								},
-								{
-									"key": "data_fields",
-									"value": "breathing_disturbances_intensity,sleep_score",
-									"description": "wakeupduration,lightsleepduration,deepsleepduration,wakeupcount,durationtosleep,remsleepduration,durationtowakeup,hr_average,hr_min,hr_max,rr_average,rr_min,rr_max"
-								},
-								{
-									"key": "",
-									"value": ""
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "Heart",
@@ -485,7 +1964,7 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -494,31 +1973,92 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "{{root_beta}}/heart?action=list&data_fields=hr,ecg,stetho&startdate=1567695600&enddate=1567699200",
-							"host": [
-								"{{root_beta}}"
-							],
-							"path": [
-								"heart"
-							],
-							"query": [
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
 									"key": "action",
-									"value": "list"
-								},
-								{
-									"key": "data_fields",
-									"value": "hr,ecg,stetho"
+									"value": "list",
+									"description": "DO NOT CHANGE",
+									"type": "text"
 								},
 								{
 									"key": "startdate",
-									"value": "1567695600"
+									"value": "",
+									"type": "text"
 								},
 								{
 									"key": "enddate",
-									"value": "1567699200"
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "data_fields",
+									"value": "",
+									"type": "text"
 								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/heart",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"heart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "list",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "signalid",
+									"value": "",
+									"description": "Get signalid with v2 Heart - List",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/heart",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"heart"
 							]
 						}
 					},
@@ -529,7 +2069,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "5e80d22a-b0e3-4e86-b5ac-bc985bec4d52",
+						"id": "2df3d481-7326-4e83-9dfe-0eed673dfd04",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -539,14 +2079,883 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f616c03a-b5ad-4acb-86ed-953a3282c2e2",
+						"id": "79d5a773-5d19-40d5-98bb-fe1c6d556951",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Dropshipment",
+			"item": [
+				{
+					"name": "Create order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a798d599-907c-49ad-832d-2a5ee8874279",
+								"exec": [
+									"// Create signature",
+									"var action = \"createorder\";",
+									"var data = action+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);",
+									"",
+									"// Order",
+									"var max_qty = 10;",
+									"var min_qty = 1;",
+									"var max_ref = 4;",
+									"var min_ref = 1;",
+									"var nb_ref = 1;",
+									"var products = [];",
+									"var max_order = 3;",
+									"var min_order = 1;",
+									"var nb_order = Math.floor(Math.random() * (max_order - min_order +1)) + min_order",
+									"var order = [];",
+									"var customer_ref_id = [];",
+									"var logistician_list = ['lomacs','scp'];",
+									"var logistician = logistician_list[Math.floor(Math.random() * logistician_list.length)];",
+									"",
+									"var available_countries = {",
+									"    \"lomacs\" : ['US', 'CA', 'MX'],",
+									"    \"scp\": ['FR', 'DE', 'GB', 'BE', 'LU', 'NL', 'AT', 'DK', 'ES', 'FI', 'GR', 'IE', 'IT', 'PT', 'SE', 'BG', 'CZ', 'EE', 'HU', 'LV', 'LT', 'PL', 'SK', 'SI', 'CH', 'HR', 'LI', 'NO']",
+									"};",
+									"",
+									"for (var i = 0; i<nb_order; i++){",
+									"    // Get valid EAN",
+									"    var country = available_countries[logistician][Math.floor(Math.random() * available_countries[logistician].length)];",
+									"    if(['US','CA','MX'].indexOf(country)>-1){",
+									"        var valid_ean = pm.environment.get(\"ean_lomacs\").split(',');",
+									"    } else {",
+									"        var valid_ean = pm.environment.get(\"ean_scp\").split(',');",
+									"    };",
+									"    // Create product object",
+									"    nb_ref = Math.floor(Math.random() * (max_ref - min_ref +1)) + min_ref",
+									"    for (var ii = 0; ii<nb_ref; ii++){",
+									"        products.push({",
+									"            \"quantity\": Math.floor(Math.random() * (max_qty - min_qty +1)) + min_qty,",
+									"            \"ean\": valid_ean[Math.floor(Math.random() * valid_ean.length)]",
+									"        });",
+									"    }",
+									"    // Create customer_ref_id",
+									"    customer_ref_id.push(pm.variables.replaceIn('{{$randomUUID}}'));",
+									"    // Create order object",
+									"    order.push({",
+									"        \"address\": {",
+									"            \"name\": pm.variables.replaceIn('{{$randomFirstName}}')+\" \"+pm.variables.replaceIn('{{$randomLastName}}'),",
+									"            \"email\": pm.variables.replaceIn('{{$randomExampleEmail}}'),",
+									"            \"telephone\": pm.variables.replaceIn('{{$randomPhoneNumberExt}}'),",
+									"            \"address1\": pm.variables.replaceIn('{{$randomStreetAddress}}'),",
+									"            \"address2\": pm.variables.replaceIn('{{$randomStreetAddress}}'),",
+									"            \"city\": pm.variables.replaceIn('{{$randomCity}}'),",
+									"            \"zip\": (Math.floor(Math.random() * (60000 - 30000 +1)) + 30000).toString(),",
+									"            \"state\": pm.variables.replaceIn('{{$randomCountryCode}}'),",
+									"            \"country\": country",
+									"        },",
+									"        \"customer_ref_id\": customer_ref_id[i],",
+									"        \"products\": products",
+									"    });",
+									"    products = [];",
+									"}",
+									"pm.environment.set('customer_ref_id', JSON.stringify(customer_ref_id));",
+									"pm.environment.set('order', JSON.stringify(order));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b551b9c5-07b1-4cb9-beeb-a6c0cade2c70",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"orders\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.orders).to.be.a('array');",
+									"});",
+									"",
+									"// TEST ORDERS RESPONSE BODY",
+									"pm.test('Orders schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i]).to.have.all.keys(\"customer_ref_id\",\"order_id\",\"status\",\"products\");",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii]).to.have.all.keys(\"ean\",\"quantity\");",
+									"        }",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Orders response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].customer_ref_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].order_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].status).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].products).to.be.a('array');",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii].ean).to.be.a('string');",
+									"            pm.expect(jsonData.body.orders[i].products[ii].quantity).to.be.a('number');",
+									"        }",
+									"    }",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Check if customer_ref_id returned are the same than the provided ones.\", function () {",
+									"    pm.expect(jsonData.body.orders.length).to.eql(JSON.parse(pm.environment.get('customer_ref_id')).length);",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].customer_ref_id).to.eql(JSON.parse(pm.environment.get('customer_ref_id'))[i]);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Check if ean and quantity returned are the same than the provided ones.\", function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii].ean).to.eql(JSON.parse(pm.environment.get('order'))[i].products[ii].ean);",
+									"            pm.expect(jsonData.body.orders[i].products[ii].quantity).to.eql(JSON.parse(pm.environment.get('order'))[i].products[ii].quantity);",
+									"        }",
+									"    }",
+									"});",
+									"",
+									"// LOG DATA",
+									"if (typeof jsonData.body.orders != \"undefined\"){",
+									"    var order_ids = [];",
+									"    var customer_ref_ids = [];",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        order_ids.push(jsonData.body.orders[i].order_id);",
+									"        customer_ref_ids.push(jsonData.body.orders[i].customer_ref_id);",
+									"    }",
+									"    pm.environment.set('order_ids', JSON.stringify(order_ids));",
+									"    pm.environment.set('customer_ref_ids', JSON.stringify(customer_ref_ids));",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "createorder",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "order",
+									"value": "{{order}}",
+									"description": "Mandatory order information",
+									"type": "text"
+								},
+								{
+									"key": "customerid",
+									"value": "{{customerid}}",
+									"description": "Optional order information",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/dropshipment",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"dropshipment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user order",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ccfd63a9-6ba6-4e48-be59-3c8ad26139af",
+								"exec": [
+									"// Create signature",
+									"var action = \"createuserorder\";",
+									"var data = action+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);",
+									"",
+									"// Mailing pref",
+									"var mailingpref = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('mailingpref', mailingpref);",
+									"",
+									"// Birthdate",
+									"var max_birthdate = 1262304000; // 2020/1/1 à 0:00:00",
+									"var min_birthdate = -631152000; // 1950/1/1 à 0:00:00",
+									"var birthdate = Math.floor(Math.random() * (max_birthdate - min_birthdate +1)) + min_birthdate;",
+									"pm.environment.set('birthdate', birthdate);",
+									"",
+									"// Measures",
+									"var max_height = 230;",
+									"var min_height = 100;",
+									"var max_weight = 20000;",
+									"var min_weight = 3000;",
+									"var measures = JSON.stringify([",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_height - min_height +1)) + min_height,",
+									"        \"unit\": -2,",
+									"        \"type\": 4",
+									"    },",
+									"    {",
+									"        \"value\": Math.floor(Math.random() * (max_weight - min_weight +1)) + min_weight,",
+									"        \"unit\": -2,",
+									"        \"type\": 1",
+									"    }",
+									"]);",
+									"pm.environment.set('measures', measures);",
+									"",
+									"// Gender",
+									"var gender = (pm.variables.replaceIn('{{$randomBoolean}}') == \"true\") ? 1 : 0;",
+									"pm.environment.set('gender', gender);",
+									"",
+									"// Preflang",
+									"var languages = ['en_EN','en_US','de_DE','es_ES','fr_FR','it_IT','ja_JA','ko_KR','nl_NL','pt_PT','ru_RU','zh_CN'];",
+									"var preflang = languages[Math.floor(Math.random() * languages.length)];",
+									"pm.environment.set('preflang', preflang);",
+									"",
+									"// Unit Pref",
+									"var unit_weight = [1,2,14];",
+									"var unit_distance = [6,8];",
+									"var unit_temperature = [11,13];",
+									"var unit_height = [6,7];",
+									"",
+									"var unif_pref = JSON.stringify({",
+									"    \"weight\":unit_weight[Math.floor(Math.random() * unit_weight.length)],",
+									"    \"distance\":unit_distance[Math.floor(Math.random() * unit_distance.length)],",
+									"    \"temperature\":unit_temperature[Math.floor(Math.random() * unit_temperature.length)],",
+									"    \"height\":unit_height[Math.floor(Math.random() * unit_height.length)]",
+									"});",
+									"pm.environment.set('unif_pref', unif_pref);",
+									"",
+									"// Email",
+									"var user_email = \"test_\".concat(pm.variables.replaceIn('{{$randomInt}}'),\"@example.com\");",
+									"pm.environment.set('user_email', user_email);",
+									"",
+									"// Firstname Lastname",
+									"var user_firstname = pm.variables.replaceIn('{{$randomFirstName}}');",
+									"var user_lastname = pm.variables.replaceIn('{{$randomLastName}}');",
+									"pm.environment.set('user_firstname', user_firstname);",
+									"pm.environment.set('user_lastname', user_lastname);",
+									"",
+									"// Shortname",
+									"var shortname = (user_firstname.substring(0,1)+user_lastname.substring(0,2)).toUpperCase();",
+									"pm.environment.set('shortname', shortname);",
+									"",
+									"// External ID",
+									"var external_id = pm.variables.replaceIn('{{$randomUUID}}');",
+									"pm.environment.set('external_id', external_id);",
+									"",
+									"// Order",
+									"var max_qty = 10;",
+									"var min_qty = 1;",
+									"var max_ref = 4;",
+									"var min_ref = 1;",
+									"var nb_ref = 1;",
+									"var products = [];",
+									"var max_order = 3;",
+									"var min_order = 1;",
+									"var nb_order = Math.floor(Math.random() * (max_order - min_order +1)) + min_order",
+									"var order = [];",
+									"var customer_ref_id = [];",
+									"var logistician_list = ['lomacs','scp'];",
+									"var logistician = logistician_list[Math.floor(Math.random() * logistician_list.length)];",
+									"",
+									"var available_countries = {",
+									"    \"lomacs\" : ['US', 'CA', 'MX'],",
+									"    \"scp\": ['FR', 'DE', 'GB', 'BE', 'LU', 'NL', 'AT', 'DK', 'ES', 'FI', 'GR', 'IE', 'IT', 'PT', 'SE', 'BG', 'CZ', 'EE', 'HU', 'LV', 'LT', 'PL', 'SK', 'SI', 'CH', 'HR', 'LI', 'NO']",
+									"};",
+									"",
+									"for (var i = 0; i<nb_order; i++){",
+									"    // Get valid EAN",
+									"    var country = available_countries[logistician][Math.floor(Math.random() * available_countries[logistician].length)];",
+									"    if(['US','CA','MX'].indexOf(country)>-1){",
+									"        var valid_ean = pm.environment.get(\"ean_lomacs\").split(',');",
+									"    } else {",
+									"        var valid_ean = pm.environment.get(\"ean_scp\").split(',');",
+									"    };",
+									"    // Create product object",
+									"    nb_ref = Math.floor(Math.random() * (max_ref - min_ref +1)) + min_ref",
+									"    for (var ii = 0; ii<nb_ref; ii++){",
+									"        products.push({",
+									"            \"quantity\": Math.floor(Math.random() * (max_qty - min_qty +1)) + min_qty,",
+									"            \"ean\": valid_ean[Math.floor(Math.random() * valid_ean.length)]",
+									"        });",
+									"    }",
+									"    // Create customer_ref_id",
+									"    customer_ref_id.push(pm.variables.replaceIn('{{$randomUUID}}'));",
+									"    // Create order object",
+									"    order.push({",
+									"        \"address\": {",
+									"            \"name\": pm.variables.replaceIn('{{$randomFirstName}}')+\" \"+pm.variables.replaceIn('{{$randomLastName}}'),",
+									"            \"email\": pm.variables.replaceIn('{{$randomExampleEmail}}'),",
+									"            \"telephone\": pm.variables.replaceIn('{{$randomPhoneNumberExt}}'),",
+									"            \"address1\": pm.variables.replaceIn('{{$randomStreetAddress}}'),",
+									"            \"address2\": pm.variables.replaceIn('{{$randomStreetAddress}}'),",
+									"            \"city\": pm.variables.replaceIn('{{$randomCity}}'),",
+									"            \"zip\": (Math.floor(Math.random() * (60000 - 30000 +1)) + 30000).toString(),",
+									"            \"state\": pm.variables.replaceIn('{{$randomCountryCode}}'),",
+									"            \"country\": country",
+									"        },",
+									"        \"customer_ref_id\": customer_ref_id[i],",
+									"        \"products\": products",
+									"    });",
+									"    products = [];",
+									"}",
+									"pm.environment.set('customer_ref_id', JSON.stringify(customer_ref_id));",
+									"pm.environment.set('order', JSON.stringify(order));",
+									"",
+									"// Scope Oauth 2.0",
+									"var scope_oauth2 = \"user.getinfo,user.info,user.metrics,user.activity,device.info,device.environment,sdk.accountowner\";",
+									"pm.environment.set('scope_oauth2', scope_oauth2);",
+									"",
+									"// Timezone",
+									"var sample_of_valid_timezone = [\"Africa/Brazzaville\",\"America/Argentina/San_Luis\",\"America/Anguilla\",\"America/El_Salvador\",\"America/Halifax\",\"America/Montserrat\",\"Antarctica/Palmer\",\"Asia/Karachi\",\"Asia/Yakutsk\",\"Brazil/West\",\"Europe/Ljubljana\",\"Asia/Nicosia\",\"Europe/Rome\",\"Europe/Zagreb\",\"Israel\",\"Pacific/Noumea\",\"US/Eastern\",\"US/Alaska\"];",
+									"var timezone = sample_of_valid_timezone[Math.floor(Math.random() * sample_of_valid_timezone.length)];",
+									"pm.environment.set('timezone', timezone);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "5c811776-1059-4472-9487-640641bf77b0",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"orders\",\"user\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.orders).to.be.a('array');",
+									"    pm.expect(jsonData.body.user).to.be.a('object');",
+									"});",
+									"",
+									"// TEST ORDERS RESPONSE BODY",
+									"pm.test('Orders schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i]).to.have.all.keys(\"customer_ref_id\",\"order_id\",\"status\",\"products\");",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii]).to.have.all.keys(\"ean\",\"quantity\");",
+									"        }",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Orders response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].customer_ref_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].order_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].status).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].products).to.be.a('array');",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii].ean).to.be.a('string');",
+									"            pm.expect(jsonData.body.orders[i].products[ii].quantity).to.be.a('number');",
+									"        }",
+									"    }",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Check if customer_ref_id returned are the same than the provided ones.\", function () {",
+									"    pm.expect(jsonData.body.orders.length).to.eql(JSON.parse(pm.environment.get('customer_ref_id')).length);",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].customer_ref_id).to.eql(JSON.parse(pm.environment.get('customer_ref_id'))[i]);",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Check if ean and quantity returned are the same than the provided ones.\", function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii].ean).to.eql(JSON.parse(pm.environment.get('order'))[i].products[ii].ean);",
+									"            pm.expect(jsonData.body.orders[i].products[ii].quantity).to.eql(JSON.parse(pm.environment.get('order'))[i].products[ii].quantity);",
+									"        }",
+									"    }",
+									"});",
+									"",
+									"// TEST USER RESPONSE BODY",
+									"pm.test('User schema should be correct.', function () {",
+									"    pm.expect(jsonData.body.user).to.have.all.keys(\"code\",\"external_id\");",
+									"});",
+									"",
+									"pm.test('User response value type should be correct.', function () {",
+									"    pm.expect(jsonData.body.user.code).to.be.a('string');",
+									"    pm.expect(jsonData.body.user.external_id).to.be.a('string');",
+									"});",
+									"",
+									"pm.test(\"Check if external_id returned is the same than the provided one.\", function () {",
+									"    pm.expect(jsonData.body.user.external_id).to.eql(pm.environment.get('external_id'));",
+									"});",
+									"",
+									"// LOGS DATA",
+									"if (typeof jsonData.body.orders != \"undefined\"){",
+									"    var order_ids = [];",
+									"    var customer_ref_ids = [];",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        order_ids.push(jsonData.body.orders[i].order_id);",
+									"        customer_ref_ids.push(jsonData.body.orders[i].customer_ref_id);",
+									"    }",
+									"    pm.environment.set('order_ids', JSON.stringify(order_ids));",
+									"    pm.environment.set('customer_ref_ids', JSON.stringify(customer_ref_ids));",
+									"}",
+									"if (typeof jsonData.body.user != \"undefined\"){",
+									"    pm.environment.set(\"code\", jsonData.body.user.code);",
+									"    pm.environment.set(\"userid\", jsonData.body.user.userid);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "createuserorder",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "mailingpref",
+									"value": "{{mailingpref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "birthdate",
+									"value": "{{birthdate}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "measures",
+									"value": "{{measures}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "{{gender}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "preflang",
+									"value": "{{preflang}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "unit_pref",
+									"value": "{{unif_pref}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{user_email}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "firstname",
+									"value": "{{user_firstname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "lastname",
+									"value": "{{user_lastname}}",
+									"description": "Optional end-user information",
+									"type": "text"
+								},
+								{
+									"key": "shortname",
+									"value": "{{shortname}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "external_id",
+									"value": "{{external_id}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "scope_oauth2",
+									"value": "{{scope_oauth2}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "timezone",
+									"value": "{{timezone}}",
+									"description": "Mandatory end-user information",
+									"type": "text"
+								},
+								{
+									"key": "order",
+									"value": "{{order}}",
+									"description": "Mandatory order information",
+									"type": "text"
+								},
+								{
+									"key": "customerid",
+									"value": "{{customerid}}",
+									"description": "Optional order information",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/dropshipment",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"dropshipment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get order status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1f4f1a39-c90c-4cb6-aa97-2e1f63aa834e",
+								"exec": [
+									"// Create signature",
+									"var action = \"getorderstatus\";",
+									"var data = action+\",\"+pm.environment.get(\"client_id\")+\",\"+pm.environment.get(\"nonce\");",
+									"var signature = CryptoJS.HmacSHA256(data ,pm.environment.get(\"secret\")).toString();",
+									"pm.environment.set('signature', signature);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d8ba0f48-b4de-4cae-8e0f-952605138366",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"// TEST MAIN RESPONSE BODY",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response schema should be correct.', function () {",
+									"    pm.expect(jsonData).to.have.all.keys(\"status\", \"body\");",
+									"});",
+									"",
+									"pm.test(\"Response value type should be correct.\", function () {",
+									"    pm.expect(jsonData.status).to.be.a('number');",
+									"    pm.expect(jsonData.body).to.be.a('object');",
+									"});",
+									"",
+									"pm.test('Status should be 0.', function () {",
+									"    pm.expect(jsonData.status).to.equal(0);",
+									"});",
+									"",
+									"pm.test('Body schema should be correct.', function () {",
+									"    pm.expect(jsonData.body).to.have.all.keys(\"orders\");",
+									"});",
+									"",
+									"pm.test(\"Body value type should be correct.\", function () {",
+									"    pm.expect(jsonData.body.orders).to.be.a('array');",
+									"});",
+									"",
+									"// TEST ORDERS RESPONSE BODY",
+									"pm.test('Orders schema should be correct.', function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i]).to.have.all.keys(\"customer_ref_id\",\"order_id\",\"status\",\"products\");",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii]).to.have.all.keys(\"ean\",\"quantity\");",
+									"        }",
+									"    }",
+									"});",
+									"",
+									"pm.test(\"Orders response value type should be correct.\", function () {",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].customer_ref_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].order_id).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].status).to.be.a('string');",
+									"        pm.expect(jsonData.body.orders[i].products).to.be.a('array');",
+									"        for (var ii=0; ii<jsonData.body.orders[i].products.length; ii++){",
+									"            pm.expect(jsonData.body.orders[i].products[ii].ean).to.be.a('string');",
+									"            pm.expect(jsonData.body.orders[i].products[ii].quantity).to.be.a('number');",
+									"        }",
+									"    }",
+									"    ",
+									"});",
+									"",
+									"pm.test(\"Check if orderids returned are the same than the provided ones.\", function () {",
+									"    pm.expect(jsonData.body.orders.length).to.eql(JSON.parse(pm.environment.get('order_ids')).length);",
+									"    for (var i=0; i<jsonData.body.orders.length; i++){",
+									"        pm.expect(jsonData.body.orders[i].order_id).to.eql(JSON.parse(pm.environment.get('order_ids'))[i]);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getorderstatus",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "nonce",
+									"value": "{{nonce}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "order_ids",
+									"value": "{{order_ids}}",
+									"description": "DO NOT USE WITH FOLLOWING PARAMS: [customer_ref_ids]",
+									"type": "text"
+								},
+								{
+									"key": "customer_ref_ids",
+									"value": "{{customer_ref_ids}}",
+									"description": "DO NOT USE WITH FOLLOWING PARAMS: [order_ids]",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "customerid",
+									"value": "{{customerid}}",
+									"description": "Optional order information",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/dropshipment",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"dropshipment"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Signature",
+			"item": [
+				{
+					"name": "Get nonce",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4515fa8e-e6ff-4893-91e5-73153a5c7c3f",
+								"exec": [
+									"// Timestamp",
+									"var timestamp = pm.variables.replaceIn('{{$timestamp}}');",
+									"",
+									"// Use the CryptoJS",
+									"var data = \"getnonce\"+\",\"+postman.getEnvironmentVariable(\"client_id\")+\",\"+timestamp;",
+									"var signature = CryptoJS.HmacSHA256(data ,postman.getEnvironmentVariable(\"secret\")).toString();",
+									"",
+									"// Set the new environment variable",
+									"postman.setEnvironmentVariable('timestamp', timestamp);",
+									"postman.setEnvironmentVariable('signature', signature);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d5414bfc-705a-4236-8064-d0894baa14ec",
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (typeof jsonData.body.nonce != \"undefined\"){",
+									"    postman.setEnvironmentVariable(\"nonce\", jsonData.body.nonce);",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "action",
+									"value": "getnonce",
+									"description": "DO NOT CHANGE",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{client_id}}",
+									"description": "Available on your Withings partner dashboard",
+									"type": "text"
+								},
+								{
+									"key": "timestamp",
+									"value": "{{timestamp}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								},
+								{
+									"key": "signature",
+									"value": "{{signature}}",
+									"description": "Generated with Pre-request Script",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://wbsapi.withings.net/v2/signature",
+							"host": [
+								"https://wbsapi.withings.net"
+							],
+							"path": [
+								"v2",
+								"signature"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
 		}
 	]
 }
